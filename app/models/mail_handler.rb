@@ -132,8 +132,11 @@ class MailHandler < ActionMailer::Base
   private
 
   MESSAGE_ID_RE = %r{^<?redmine\.([a-z0-9_]+)\-(\d+)\.\d+@}
-  ISSUE_REPLY_SUBJECT_RE = %r{\[[^\]]*#(\d+)\]}
-  MESSAGE_REPLY_SUBJECT_RE = %r{\[[^\]]*msg(\d+)\]}
+  # Better linking, just usings hash and id
+  #ISSUE_REPLY_SUBJECT_RE = %r{\[[^\]]*#(\d+)\]}
+  #MESSAGE_REPLY_SUBJECT_RE = %r{\[[^\]]*msg(\d+)\]}
+  ISSUE_REPLY_SUBJECT_RE = %r{#(\d+)}
+  MESSAGE_REPLY_SUBJECT_RE = %r{msg(\d+)}
 
   def dispatch
     headers = [email.in_reply_to, email.references].flatten.compact
