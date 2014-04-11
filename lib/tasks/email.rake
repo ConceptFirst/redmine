@@ -138,7 +138,9 @@ END_DESC
       options[:no_account_notice] = ENV['no_account_notice'] if ENV['no_account_notice']
       options[:default_group] = ENV['default_group'] if ENV['default_group']
 
-      Redmine::IMAP.check(imap_options, options)
+      Mailer.with_synched_deliveries do
+            Redmine::IMAP.check(imap_options, options)
+      end
     end
 
     desc <<-END_DESC
