@@ -269,7 +269,7 @@ class MailHandler < ActionMailer::Base
                           :file => attachment.decoded,
                           :filename => attachment.filename,
                           :author => user,
-                          :content_type => attachment.mime_type)
+                          :content_type => attachment.mime_type) unless attachment.filename == 'image001.jpg' && attachment.decoded.length == 1414
       end
     end
   end
@@ -470,6 +470,10 @@ class MailHandler < ActionMailer::Base
 
   # Removes the email body of text after the truncation configurations.
   def cleanup_body(body)
+    body = body.gsub %Q{\r\nCompany Director - Rx-info Ltd\r\n\r\nWork 08456 0456 01 | Telephone 01392 460263 | Mobile 07929 198905\r\nWest wing, Old Broadclyst Station, Broadclyst, Exeter EX5 3AS}, ''
+    body = body.gsub %Q{Have you had your Define Eureka! moment? Find out more here: July Newsletter\r\n________________________________\r\n\r\n[cid:image001.jpg@01CA3C5D.1AE39CF0]          }, ''
+    body = body.gsub %Q{Rx-info Ltd ۰ Registered Ltd Company 04981011۰ 1 Colleton Crescent ۰ Exeter ۰ Devon ۰ England ۰ EX2 4DG ۰www.rx-info.co.uk\r\n},''
+    body = body.gsub %Q{This email is sent on behalf of Rx-info Ltd and any attachments are confidential and may be privileged. If you are not the intended recipient, please notify the sender immediately by return e-mail, and then delete the email without making any copies or disclosing the contents to any other person. Email transmission cannot be guaranteed to be secure or error or virus free. You should carry out your own virus check before opening any attachment.}, ''
     delimiters = Setting.mail_handler_body_delimiters.to_s.split(/[\r\n]+/).reject(&:blank?).map {|s| Regexp.escape(s)}
     unless delimiters.empty?
       regex = Regexp.new("^[> ]*(#{ delimiters.join('|') })\s*[\r\n].*", Regexp::MULTILINE)
