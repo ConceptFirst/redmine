@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Redmine - project management software
 # Copyright (C) 2006-2013  Jean-Philippe Lang
 #
@@ -61,6 +62,13 @@ class MailHandler < ActionMailer::Base
   def receive(email)
     @email = email
     sender_email = email.from.to_a.first.to_s.strip
+    # Ignore emails to other endpoints
+    unless email.to.any? { |x| x.include? 'rxinfo@conceptfirst.com' }
+      if logger && logger.info
+        logger.info  "MailHandler: ignoring email to other endpoint [#{email.to}]"
+      end
+      return false
+    end
     # Ignore emails received from the application emission address to avoid hell cycles
     if sender_email.downcase == Setting.mail_from.to_s.strip.downcase
       if logger && logger.info
