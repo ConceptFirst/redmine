@@ -454,7 +454,7 @@ class Mailer < ActionMailer::Base
     # as far as we don't send multiple emails for the same object
     timestamp = object.send(object.respond_to?(:created_on) ? :created_on : :updated_on)
     hash = "redmine.#{object.class.name.demodulize.underscore}-#{object.id}.#{timestamp.strftime("%Y%m%d%H%M%S")}"
-    host = Setting.mail_from.to_s.gsub(%r{^.*@}, '')
+    host = Setting.mail_from.to_s.gsub(%r{^.*@}, '').gsub(%r{>}, '')
     host = "#{::Socket.gethostname}.redmine" if host.empty?
     "#{hash}@#{host}"
   end
